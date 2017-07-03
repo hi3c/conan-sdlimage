@@ -1,5 +1,6 @@
 from conans import ConanFile, CMake
 import os
+import shutil
 
 
 channel = os.getenv("CONAN_CHANNEL", "experimental")
@@ -8,7 +9,7 @@ username = os.getenv("CONAN_USERNAME", "hi3c")
 
 class Sdl2imageTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    requires = "SDL2_image/2.0.1@%s/%s" % (username, channel)
+    requires = "SDL2_image/2.0.1_1@%s/%s" % (username, channel)
     generators = "cmake"
 
     def build(self):
@@ -22,5 +23,7 @@ class Sdl2imageTestConan(ConanFile):
         self.copy("*.dylib*", dst="bin", src="lib")
 
     def test(self):
+        file = os.path.join(self.conanfile_directory, "lena.png")
+        shutil.copy(file, "bin/lena.png")
         os.chdir("bin")
         self.run(".%sexample" % os.sep)
